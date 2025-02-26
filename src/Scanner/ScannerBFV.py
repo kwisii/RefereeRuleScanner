@@ -1,6 +1,8 @@
 import os
 import re
 import fitz
+import random
+import genanki
 
 class ScannerBFV:
 
@@ -8,9 +10,6 @@ class ScannerBFV:
         self.pdf_path = pdf_file
         self.tag = [os.path.basename(pdf_file).removesuffix(".pdf")]
         self.qa_pairs = []
-    
-    def get_tags(self) -> list:
-        return self.tag
     
     def get_qa_pairs(self) -> list:
         return self.qa_pairs
@@ -49,10 +48,13 @@ class ScannerBFV:
         
         for text, color in self._extract_text_with_colors():
             if re.match(r"Frage \d+", text):
-                if question and answer:
-                    self.qa_pairs.append((question.strip(), answer.strip()))
-                    question = ""
-                    answer = ""
+                if question:
+                    if answer:
+                        self.qa_pairs.append((question.strip(), answer.strip()))
+                        question = ""
+                        answer = ""
+                    else:   # for questions without answers -> Regel+5 5053
+                        question = ""
                 is_question = True
                 continue
 
@@ -66,3 +68,24 @@ class ScannerBFV:
             
         if question and answer:
             self.qa_pairs.append((question.strip(), answer.strip()))
+
+    def create_note(self, qa_pair):
+        note = genanki.Note(
+            model = genanki.Model(
+                random.randrange(1 << 30, 1 << 31),
+                'Simple Model',
+                fields=[
+                    {'name': 'Question'},
+                    {'name': 'Answer'},
+                ],
+                templates=[
+                    {
+                    'name': 'Card 1',
+                    'qfmt': '{{Question}}',
+                    'afmt': '{{FrontSide}}<hr id="answer">{{Answer}}',
+                    },
+                ]),
+            fields=qa_pair,
+            tags = self.tag)
+    
+        return note

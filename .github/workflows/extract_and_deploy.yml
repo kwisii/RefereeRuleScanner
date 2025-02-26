@@ -26,15 +26,13 @@ jobs:
 
       - name: Run PDF Extraction Script
         run: |
-          python create_anki_set_bfv.py
-          python create_anki_set_dfb.py
+          python src/create_anki_set_bfv.py
+          python src/create_anki_set_dfb.py
 
       - name: Upload extracted text file
         uses: actions/upload-artifact@v4
         with:
           name: Anki_Import
           path: |
-            DFB_Fragen_Anki.txt
-            Regelfragen_Anki.txt
             Blaues_Buch.apkg
             DFB_Fragen.apkg

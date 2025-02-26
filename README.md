@@ -28,10 +28,10 @@ cd RefereeRuleScanner
 pip install pymupdf genanki
 ```
 
-3. Simply place the pdfs in the corresponding directories (```pdfs_bfv``` or ```pdfs_dfb```) and execute the scripts:
+3. Simply execute the scripts:
 ```
-python create_anki_set_bfv.py
-python create_anki_set_dfb.py
+python src/create_anki_set_bfv.py
+python src/create_anki_set_dfb.py
 ```
 
 This will generate ```Blaues_Buch.apkg``` and ```DFB_Fragen.apkg``` files containing all extracted questions and answers in a format ready for import into Anki.

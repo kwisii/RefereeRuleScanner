@@ -1,6 +1,8 @@
 import os
 import re
 import fitz
+import random
+import genanki
 
 class ScannerDFB:
 
@@ -8,9 +10,6 @@ class ScannerDFB:
         self.pdf_path = pdf_file
         self.tag = [os.path.basename(pdf_file).removesuffix(".pdf")]
         self.qa_pairs = []
-    
-    def get_tags(self) -> list:
-        return self.tag
     
     def get_qa_pairs(self) -> list:
         return self.qa_pairs
@@ -88,4 +87,24 @@ class ScannerDFB:
             for idx, (question, answer, situation) in enumerate(self.qa_pairs):
                 if situation.endswith(current_situation_number):
                     self.qa_pairs[idx] = (question, current_answer.strip(), situation)
-                    
+
+    def create_note(self, qa_pair):
+        note = genanki.Note(
+            model = genanki.Model(
+                random.randrange(1 << 30, 1 << 31),
+                'Simple Model',
+                fields=[
+                    {'name': 'Question'},
+                    {'name': 'Answer'},
+                ],
+                templates=[
+                    {
+                    'name': 'Card 1',
+                    'qfmt': '{{Question}}',
+                    'afmt': '{{FrontSide}}<hr id="answer">{{Answer}}',
+                    },
+                ]),
+            fields=[qa_pair[0], qa_pair[1]],    # 0: situation, 1: answer
+            tags = self.tag)
+    
+        return note
