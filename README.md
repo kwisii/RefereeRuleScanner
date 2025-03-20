@@ -25,7 +25,7 @@ cd RefereeRuleScanner
 
 2. Install the required dependencies:
 ```
-pip install pymupdf genanki
+pip install pymupdf genanki pytest parameterized
 ```
 
 3. Simply execute the scripts:
